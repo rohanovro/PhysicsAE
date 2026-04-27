@@ -11,7 +11,7 @@ This repository contains the official implementation of **PhysicsAE**, a physics
 
 ---
 
-## 📊 Key Results
+##  Key Results
 
 | Model | AUC | F1 | Precision | Recall |
 |-------|-----|-----|-----------|--------|
@@ -22,7 +22,7 @@ This repository contains the official implementation of **PhysicsAE**, a physics
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Clone the repository
 
@@ -80,14 +80,7 @@ Expected output:
 
 ---
 
-## 📝 Citation
 
-```bibtex
-@article{rohan2025physicsae,
-  title={Physics-Guided Self-Supervised Autoencoder for Bearing Fault Detection},
-  author={Rohan, Mahmudul Hasan},
-  journal={Measurement},
-  year={2025}
 }
 ```
 
