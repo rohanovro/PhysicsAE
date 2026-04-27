@@ -1,0 +1,37 @@
+# Data Directory
+
+## Paderborn University Bearing Dataset
+
+### Download Instructions
+
+1. Visit the official dataset page:  
+   https://mb.uni-paderborn.de/kat/forschung/kat-datacenter/bearing-datacenter/
+
+2. Download `paderborn-db.zip`
+
+3. Place the file here: `data/paderborn-db.zip`
+
+### Dataset Structure
+
+The dataset contains vibration signals from bearings under different health conditions:
+
+| Label | Folders | Description |
+|-------|---------|-------------|
+| Healthy | K001–K006 | Normal operating bearings |
+| Inner fault | KI04, KI14, KI16 | Inner race damage |
+| Outer fault | KA04, KA15, KA16 | Outer race damage |
+| Mixed fault | KB23 | Combined damage |
+
+### Sampling Details
+
+- Original sampling rate: 64,000 Hz
+- Resampled to: 12,000 Hz
+- FFT window size: 1024 samples
+- Hop size: 256 samples
+- FFT bins (features): 513
+
+### Notes
+
+- Raw `.zip` and `.mat` files are excluded from version control via `.gitignore`
+- All preprocessing is done on-the-fly in `src/data_loader.py`
+- No manual extraction needed — the pipeline reads directly from the `.zip`
