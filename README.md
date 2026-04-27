@@ -7,8 +7,8 @@
 This repository contains the official implementation of **PhysicsAE**, a physics-guided self-supervised autoencoder for bearing fault detection, as presented in:
 
 > **Physics-Guided Self-Supervised Autoencoder for Bearing Fault Detection Using Harmonic Frequency Constraints and Frequency-Aware Explainability**  
-> *Submitted to Measurement, Elsevier*
-
+**Author : Mahmudul Hasan Rohan , Sudipto Biswas , Ayitri Barua ,Rakesh Roy , Dr. Md. Mahfuzur Rahman**
+**Jashore University of Science and Technology**
 ---
 
 ##  Key Results
