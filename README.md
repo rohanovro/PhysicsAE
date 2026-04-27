@@ -42,9 +42,8 @@ pip install -r requirements.txt
 
 ### 3. Download the Paderborn dataset
 
-Download from: https://mb.uni-paderborn.de/kat/forschung/kat-datacenter/bearing-datacenter/
+Download from: https://mb.uni-paderborn.de/kat/forschung/bearing-datacenter/data-sets-and-download
 
-Place `paderborn-db.zip` in the `data/` folder.
 
 ### 4. Run the complete pipeline
 
