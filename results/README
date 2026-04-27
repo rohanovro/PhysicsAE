@@ -1,0 +1,14 @@
+# Results
+
+This directory is auto-generated when you run `python scripts/run_all.py`.
+
+## Contents
+
+| Directory | Contents |
+|-----------|----------|
+| `figures/` | All paper figures (ROC curves, SHAP plots, spectrograms, etc.) |
+| `tables/`  | CSV files with numeric results (AUC, F1, precision, recall) |
+| `models/`  | Model checkpoints (`.pt` files) |
+
+Model checkpoints are excluded from version control via `.gitignore`.
+CSV result tables are tracked so reviewers can verify numbers without re-running.
