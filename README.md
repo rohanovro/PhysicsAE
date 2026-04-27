@@ -9,7 +9,7 @@ This repository contains the official implementation of **PhysicsAE**, a physics
 > **Physics-Guided Self-Supervised Autoencoder for Bearing Fault Detection Using Harmonic Frequency Constraints and Frequency-Aware Explainability**  
 
 
-**Authors: Mahmudul Hasan Rohan , Sudipto Biswas , Ayitri Barua ,Rakesh Roy , Dr. Md. Mahfuzur Rahman**
+**Authors: Mahmudul Hasan Rohan , Sudipto Biswas , Trisha Barua ,Rakesh Roy , Dr. Md. Mahfuzur Rahman**
     
    **Jashore University of Science and Technology**
 ---
