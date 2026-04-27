@@ -10,6 +10,7 @@ This repository contains the official implementation of **PhysicsAE**, a physics
 
 
 **Author : Mahmudul Hasan Rohan , Sudipto Biswas , Ayitri Barua ,Rakesh Roy , Dr. Md. Mahfuzur Rahman**
+
 **Jashore University of Science and Technology**
 ---
 
