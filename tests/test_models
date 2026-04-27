@@ -1,0 +1,118 @@
+"""
+Unit tests for PhysicsAE models and training utilities.
+
+Run with:
+    python -m pytest tests/ -v
+"""
+
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+import numpy as np
+import pytest
+import torch
+
+from models import PhysicsAE, DeepSVDD
+from train import build_union_mask, physics_loss
+from config import CONFIG, FAULT_FREQUENCIES
+
+
+# ── Fixtures ──────────────────────────────────────────────────────────────────
+
+@pytest.fixture
+def batch():
+    """Small random batch for fast tests."""
+    torch.manual_seed(0)
+    return torch.randn(8, 513)
+
+
+@pytest.fixture
+def physicsae():
+    return PhysicsAE(input_dim=513, latent_dim=16, dropout=0.1)
+
+
+@pytest.fixture
+def deep_svdd():
+    return DeepSVDD(input_dim=513, latent_dim=16)
+
+
+# ── PhysicsAE tests ────────────────────────────────────────────────────────────
+
+class TestPhysicsAE:
+
+    def test_forward_shape(self, physicsae, batch):
+        x_hat, z = physicsae(batch)
+        assert x_hat.shape == batch.shape, "Reconstruction shape mismatch"
+        assert z.shape == (8, 16), "Latent shape mismatch"
+
+    def test_anomaly_score_shape(self, physicsae, batch):
+        scores = physicsae.anomaly_score(batch)
+        assert scores.shape == (8,), "Anomaly score should be (B,)"
+
+    def test_anomaly_score_nonnegative(self, physicsae, batch):
+        scores = physicsae.anomaly_score(batch)
+        assert (scores >= 0).all(), "Anomaly scores should be non-negative"
+
+    def test_reconstruction_close_after_overfit(self):
+        """Sanity: model can overfit a tiny dataset (loss should decrease)."""
+        model = PhysicsAE(input_dim=64, latent_dim=8, dropout=0.0)
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
+        x = torch.randn(16, 64)
+
+        losses = []
+        for _ in range(50):
+            x_hat, _ = model(x)
+            loss = ((x - x_hat) ** 2).mean()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            losses.append(loss.item())
+
+        assert losses[-1] < losses[0], "Loss should decrease on tiny overfit"
+
+
+# ── DeepSVDD tests ────────────────────────────────────────────────────────────
+
+class TestDeepSVDD:
+
+    def test_forward_shape(self, deep_svdd, batch):
+        z = deep_svdd(batch)
+        assert z.shape == (8, 16)
+
+    def test_anomaly_score_raises_without_centre(self, deep_svdd, batch):
+        with pytest.raises(RuntimeError, match="init_centre"):
+            deep_svdd.anomaly_score(batch)
+
+    def test_init_centre_and_score(self, deep_svdd):
+        from torch.utils.data import DataLoader
+        data = torch.randn(64, 513)
+        loader = DataLoader(data, batch_size=16)
+        deep_svdd.init_centre(loader, device='cpu')
+        assert deep_svdd.centre is not None
+        scores = deep_svdd.anomaly_score(data)
+        assert scores.shape == (64,)
+        assert (scores >= 0).all()
+
+
+# ── Physics loss tests ────────────────────────────────────────────────────────
+
+class TestPhysicsLoss:
+
+    def test_union_mask_shape(self):
+        mask = build_union_mask(FAULT_FREQUENCIES, fs=12000, n_fft=1024)
+        assert mask.shape == (513,)
+        assert mask.dtype == torch.bool
+
+    def test_physics_loss_scalar(self, batch):
+        x_hat = batch + 0.01 * torch.randn_like(batch)
+        loss = physics_loss(batch, x_hat, FAULT_FREQUENCIES, fs=12000, n_fft=1024)
+        assert loss.dim() == 0, "Physics loss should be scalar"
+        assert loss.item() >= 0
+
+    def test_physics_loss_decreases_on_perfect_reconstruction(self):
+        x = torch.randn(4, 513)
+        loss_perfect = physics_loss(x, x.clone(), FAULT_FREQUENCIES, fs=12000, n_fft=1024)
+        loss_noisy   = physics_loss(x, x + torch.randn_like(x), FAULT_FREQUENCIES, fs=12000, n_fft=1024)
+        # noisy reconstruction should have higher (or equal) loss
+        assert loss_noisy.item() >= loss_perfect.item() - 1e-5
