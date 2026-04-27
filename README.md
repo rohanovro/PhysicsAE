@@ -65,7 +65,7 @@ PhysicsAE/
 
 ---
 
-## 📈 Reproducibility
+## Reproducibility
 
 All paper results are reproducible by running:
 
@@ -81,7 +81,7 @@ Expected output:
 ---
 
 
-}
+
 ```
 
 ---
